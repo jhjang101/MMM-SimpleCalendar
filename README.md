@@ -30,20 +30,9 @@ See [Configuration Options](#configuration-options) below.
    ```
 2. Clone the repository:
 
-
-
-
-
    ```sh
-   git clone [https://github.com/YOUR_GITHUB_USERNAME/mmm-simplecalendar.git](https://github.com/YOUR_GITHUB_USERNAME/mmm-simplecalendar.git)
+   git clone [https://github.com/jhjang101/mmm-simplecalendar.git](https://github.com/jhjang101/mmm-simplecalendar.git)
    ```
-
-
-
-
-
-
-
 ## Configuration
 To use this module, add it to the `modules` array in your `config/config.js` file:
 
