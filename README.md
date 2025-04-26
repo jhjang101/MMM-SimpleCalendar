@@ -76,9 +76,9 @@ modules: [
                     color: "#ffffff"
                 },
                 {
-                	fetchInterval: 10 * 60 * 1000,
-                	url: "https://ics.calendarlabs.com/76/mm3137/US_Holidays.ics",
-                	color: "#ff0000"
+                	   fetchInterval: 10 * 60 * 1000,
+                	   url: "https://ics.calendarlabs.com/76/mm3137/US_Holidays.ics",
+                	   color: "#ff0000"
                 },
             ]
         }
