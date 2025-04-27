@@ -1,6 +1,6 @@
 {
     "name": "mmm-simplecalendar",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A simple calendar module for MagicMirror2",
     "main": "MMM-SimpleCalendar.js",
     "author": "Joon Hee Jang",

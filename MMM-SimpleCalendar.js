@@ -1,6 +1,6 @@
 // ==============================
 // Module: MMM-SimpleCalendar
-// Version: 1.0.0 - April 2025
+// Version: 1.0.1 - April 2025
 // Author: Joon Hee Jang
 // License: MIT
 // ==============================
@@ -46,6 +46,7 @@ Module.register("MMM-SimpleCalendar", {
 
         // Initial render
         this.updateCurrentDate(); 
+        this.calculateFirstVisibleDate();
         this.refreshCalendar();
 
         // Periodically request new events
@@ -78,7 +79,7 @@ Module.register("MMM-SimpleCalendar", {
 
     // Calendar Refreshing Logic
     refreshCalendar: function () {
-        this.calculateVisibleDates()
+        this.calculateVisibleDates();
         this.renderCalendar(this.currentYear, this.currentMonth);
         this.renderEvents(); // from this.eventPool
         this.updateDom();
@@ -89,10 +90,8 @@ Module.register("MMM-SimpleCalendar", {
     // === Date Utility ===
     // ====================
 
-    // Generate List of Visible Date
-    calculateVisibleDates: function() {
-        this.visibleDates = [];
-    
+    // Calculate The First Visible Date on the Calendar
+    calculateFirstVisibleDate: function () {
         let firstVisibleDate;
         // Calculate the first visible date for 6weeks mode
         if (this.config.mode === "6weeks") {
@@ -109,11 +108,18 @@ Module.register("MMM-SimpleCalendar", {
             // First visible date in the calendar grid:
             firstVisibleDate = new Date(this.currentYear, this.currentMonth, 1 - offset);
         }
+
+        this.firstVisibleDate = firstVisibleDate
+    },
+    
+    // Generate List of Visible Date
+    calculateVisibleDates: function() {
+        this.visibleDates = [];
         
         // Build the 42 visible dates array
         for (let i = 0; i < 42; i++) {
-            const d = new Date(firstVisibleDate);
-            d.setDate(firstVisibleDate.getDate() + i);
+            const d = new Date(this.firstVisibleDate);
+            d.setDate(this.firstVisibleDate.getDate() + i);
             this.visibleDates.push(d);
         }
     
@@ -311,7 +317,7 @@ Module.register("MMM-SimpleCalendar", {
                     rowId = r
                     size = event.size
                     remainingDaysInTheWeek = 7 - (firstCellId % 7);
-                    lastCellId = firstCellId + size -1
+                    lastCellId = Math.min(firstCellId + size -1, 41)
                     firstWeekSize = Math.min(size, remainingDaysInTheWeek);
                     lastWeekSize = (size - firstWeekSize) % 7
 
@@ -324,7 +330,7 @@ Module.register("MMM-SimpleCalendar", {
 
                     } else {
                         eventRow.classList.add("multiday-event-firstweek");
-                        eventRow.style.width = `calc(${firstWeekSize * 100}%)`;
+                        eventRow.style.width = `calc(${firstWeekSize * 100}% - 6px)`;
 
                     }
                     eventRow.innerText = displayText;
@@ -361,7 +367,7 @@ Module.register("MMM-SimpleCalendar", {
                 eventRow.style.fontSize = this.config.eventFontSize;
                 eventRow.style.backgroundColor = event.color;
                 eventRow.style.color = this.getContrastColor(event.color);
-                eventRow.style.width = "700%"; // Full week width (7 days)
+                eventRow.style.width = `calc(700% - 6px`; // Full week width (7 days)
             }
 
             // Mark row used for each day spanned
@@ -369,7 +375,7 @@ Module.register("MMM-SimpleCalendar", {
                 usedRows[k][rowId] = true;
             }
         }
-        console.log(lastWeekSize);
+        console.log("MultiDayEvent");
     },
 
     // Single Day Event Logic
@@ -399,6 +405,7 @@ Module.register("MMM-SimpleCalendar", {
                 }
             }
         }
+        console.log("SingleDayEvent");
     },
 
 
@@ -563,15 +570,9 @@ Module.register("MMM-SimpleCalendar", {
 
     // Calendar Navigation
     navigateDay: function (delta) {
-        this.currentDay += delta;
-        if (this.currentMonth > 11) {
-            this.currentMonth = 0;
-            this.currentYear += 1;
-        } else if (this.currentMonth < 0) {
-            this.currentMonth = 11;
-            this.currentYear -= 1;
-        }
-
+        this.firstVisibleDate.setDate(this.firstVisibleDate.getDate() + delta);
+        this.calculateVisibleDates(); // Regenerate the visible dates
+        console.log("navigateDay")
         this.refreshCalendar();
     },
 });
