@@ -1,6 +1,6 @@
 // ==============================
 // Module: MMM-SimpleCalendar
-// Version: 1.0.1 - April 2025
+// Version: 1.0.2 - May 2025
 // Author: Joon Hee Jang
 // License: MIT
 // ==============================
@@ -54,6 +54,7 @@ Module.register("MMM-SimpleCalendar", {
             console.log("update");
             this.requestEvents();
             this.updateCurrentDate(); 
+            this.calculateFirstVisibleDate();
             this.refreshCalendar();
         }, this.config.refreshInterval);
     },
@@ -571,7 +572,6 @@ Module.register("MMM-SimpleCalendar", {
     // Calendar Navigation
     navigateDay: function (delta) {
         this.firstVisibleDate.setDate(this.firstVisibleDate.getDate() + delta);
-        this.calculateVisibleDates(); // Regenerate the visible dates
         console.log("navigateDay")
         this.refreshCalendar();
     },
